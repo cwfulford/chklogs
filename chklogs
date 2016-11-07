@@ -1,14 +1,14 @@
 #!/bin/bash
-# $Id: chklogs,v 1.8 2016/11/07 17:21:51 fulford Exp fulford $
+# $Id: chklogs,v 1.9 2016/11/07 17:23:15 fulford Exp fulford $
 # $Source: /src/merlin/usr/local/etc/RCS/chklogs,v $
-# $Revision: 1.8 $
+# $Revision: 1.9 $
 # Author C W Fulford.
 # Copyright 2016 (c) C W Fulford.
 # Licensed for public use under the LGPL, .
 # For assistance contact fulford@fulford.net 0793 572 8612
 ########################################################################
 cmd=`basename $0`
-ver=`echo "$Id: chklogs,v 1.8 2016/11/07 17:21:51 fulford Exp fulford $"|awk '{print $3,$4,$5}'`
+ver=`echo "$Id: chklogs,v 1.9 2016/11/07 17:23:15 fulford Exp fulford $"|awk '{print $3,$4,$5}'`
 syntax="$cmd [[-c <configfile>] [-d][-v]|-V] <hostid>"
 tdir=/tmp/$cmd;mkdir $tdir
 while [ $# -gt 0 ] ;do
@@ -16,7 +16,7 @@ while [ $# -gt 0 ] ;do
 		-c) config=$2;shift 2;;
 		-d) set -x;debug=0;shift;;
 		-v) verbose=:;shift;;
-		-V) echo "$cmd $Revision: 1.8 $ $Date: 2016/11/07 17:21:51 $"|awk '{print $1,$3,$6}';exit;;  
+		-V) echo "$cmd $Revision: 1.9 $ $Date: 2016/11/07 17:23:15 $"|awk '{print $1,$3,$6}';exit;;  
 		*) hostid=$1;shift;;
 	esac
 done
@@ -47,4 +47,5 @@ for f in *;do
 		;;
 	esac
 done
+rm -r $tdir
 	 
