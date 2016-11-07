@@ -1,5 +1,5 @@
 #!/bin/bash
-# $Id: chklogs,v 1.7 2016/11/07 16:33:52 fulford Exp fulford $
+# $Id: chklogs,v 1.7 2016/11/07 16:33:52 fulford Exp $
 # $Source: /src/merlin/usr/local/etc/RCS/chklogs,v $
 # $Revision: 1.7 $
 # Author C W Fulford.
@@ -8,7 +8,7 @@
 # For assistance contact fulford@fulford.net 0793 572 8612
 ########################################################################
 cmd=`basename $0`
-ver=`echo "$Id: chklogs,v 1.7 2016/11/07 16:33:52 fulford Exp fulford $"|awk '{print $3,$4,$5}'`
+ver=`echo "$Id: chklogs,v 1.7 2016/11/07 16:33:52 fulford Exp $"|awk '{print $3,$4,$5}'`
 syntax="$cmd [[-c <configfile>] [-d][-v]|-V] <hostid>"
 while [ $# -gt 0 ] ;do
 	case $1 in 
