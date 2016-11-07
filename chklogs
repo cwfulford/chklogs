@@ -1,39 +1,49 @@
 #!/bin/bash
-# $Id: chklogs,v 1.7 2016/11/07 16:33:52 fulford Exp $
+# $Id: chklogs,v 1.8 2016/11/07 17:21:51 fulford Exp fulford $
 # $Source: /src/merlin/usr/local/etc/RCS/chklogs,v $
-# $Revision: 1.7 $
+# $Revision: 1.8 $
 # Author C W Fulford.
 # Copyright 2016 (c) C W Fulford.
 # Licensed for public use under the LGPL, .
 # For assistance contact fulford@fulford.net 0793 572 8612
 ########################################################################
 cmd=`basename $0`
-ver=`echo "$Id: chklogs,v 1.7 2016/11/07 16:33:52 fulford Exp $"|awk '{print $3,$4,$5}'`
+ver=`echo "$Id: chklogs,v 1.8 2016/11/07 17:21:51 fulford Exp fulford $"|awk '{print $3,$4,$5}'`
 syntax="$cmd [[-c <configfile>] [-d][-v]|-V] <hostid>"
+tdir=/tmp/$cmd;mkdir $tdir
 while [ $# -gt 0 ] ;do
 	case $1 in 
 		-c) config=$2;shift 2;;
 		-d) set -x;debug=0;shift;;
 		-v) verbose=:;shift;;
-		-V) echo "$cmd $Revision: 1.7 $ $Date: 2016/11/07 16:33:52 $"|awk '{print $1,$3,$6}';exit;;  
+		-V) echo "$cmd $Revision: 1.8 $ $Date: 2016/11/07 17:21:51 $"|awk '{print $1,$3,$6}';exit;;  
 		*) hostid=$1;shift;;
 	esac
 done
-[ -n "$hostid" ] &&{
+[ -z "$hostid" ] &&{
 	 echo $syntax >&2;exit 1
 }
 config=${config:-/usr/local/etc/${cmd}.cf}
-[ -r $config ]||{echo "$cmd: Can\'t find $config";exit 1}
-eval `sed <$config -ne "/^$hostid:/,/^$/{/^[\t ]*[^#].*/p}"`
+[ -r $config ]||{
+	echo "$cmd: Can\'t find $config"
+	exit
+}
+eval `sed <$config -ne "/^$hostid:/,/^$/{/^[\t ][^#]*/p}"`
 
-cd $tdir
+cd $tdir || {
+	echo "$cmd: Could not change to directory $tdit" >&2
+	exit 1
+}
+echo "logfiles = $logfiles"
 for log in $logfiles ;do
-	scp $host:$logfile `basename $f`
+	tlog=`basename $log`
+	scp -P227 $hostid:$log `basename $tlog` 
 done
 for f in *;do
 	case $f in 
-		bflsync) grep failed $f && {
-			mailx fulford -s "URGENT - Problems with $f on $host" <$f
+	bflsync) grep -s failed $f  && {
+		mailx -s "URGENT - Problems with $f on $hostid" fulford <$f
+		}
 		;;
 	esac
 done
