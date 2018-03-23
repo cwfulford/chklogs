@@ -1,14 +1,14 @@
 #!/bin/bash
-# $Id: chklogs,v 1.11 2016/11/11 15:28:42 fulford Exp $
-# $Source: /src/merlin/usr/local/etc/RCS/chklogs,v $
-# $Revision: 1.11 $
+# $Id: chklogs,v 1.12 2018/03/23 16:23:40 fulford Exp fulford $
+# $Source: /src/admin/usr/local/etc/RCS/chklogs,v $
+# $Revision: 1.12 $
 # Author C W Fulford.
 # Copyright 2016 (c) C W Fulford.
 # Licensed for public use under the LGPL, .
 # For assistance contact fulford@fulford.net 0793 572 8612
 ########################################################################
 cmd=`basename $0`
-ver=`echo "$Id: chklogs,v 1.11 2016/11/11 15:28:42 fulford Exp $"|awk '{print $3,$4,$5}'`
+ver=`echo "$Id: chklogs,v 1.12 2018/03/23 16:23:40 fulford Exp fulford $"|awk '{print $3,$4,$5}'`
 syntax="$cmd [[-c <configfile>] [-d][-v]|-V] <hostid>"
 tdir=/tmp/$cmd;mkdir $tdir
 while [ $# -gt 0 ] ;do
@@ -16,10 +16,11 @@ while [ $# -gt 0 ] ;do
 		-c) config=$2;shift 2;;
 		-d) set -x;debug=0;shift;;
 		-v) verbose=:;shift;;
-		-V) echo "$cmd $Revision: 1.11 $ $Date: 2016/11/11 15:28:42 $"|awk '{print $1,$3,$6}';exit;;  
+		-V) echo "$cmd $Revision: 1.12 $ $Date: 2018/03/23 16:23:40 $"|awk '{print $1,$3,$6}';exit;;  
 		*) hostid=$1;shift;;
 	esac
 done
+rval=0
 [ -z "$hostid" ] &&{
 	 echo $syntax >&2;exit 1
 }
@@ -40,11 +41,13 @@ for log in $logfiles ;do
 done
 for f in *;do
 	case $f in 
-	bflsync) grep -q failed $f  && {
+	bflsync*) grep -q failed $f  && {
 		mailx -s "URGENT - Problems with $f on $hostid" fulford <$f
+		rval=expr $rval + 1
 		}
 		;;
 	esac
 done
 rm -r $tdir
+exit $rval
 	 

@@ -1,7 +1,7 @@
 <pre>
 
 bfl-uw:
-	logfiles="/var/log/bflsync"
+	logfiles=/var/log/bflsync-`date +%u`
 	port=227
 
 ######################################################################
